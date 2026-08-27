@@ -2,6 +2,6 @@ venv/
 .env
 __pycache__/
 *.pyc
-storage/pdf/*
-!storage/pdf/.gitkeep
+storage/img/*
+!storage/img/.gitkeep
 .DS_Store
