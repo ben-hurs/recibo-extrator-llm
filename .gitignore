@@ -1,0 +1,7 @@
+venv/
+.env
+__pycache__/
+*.pyc
+storage/pdf/*
+!storage/pdf/.gitkeep
+.DS_Store
