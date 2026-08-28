@@ -6,6 +6,7 @@ from minio import Minio
 from io import BytesIO
 from typing import Dict, List, Any
 from contextlib import contextmanager
+from langfuse.decorators import observe, langfuse_context
 
 import json
 import base64
@@ -54,9 +55,15 @@ def recibo_extraction_pipeline():
             return keys
 
     @task()
+    @observe()
     def extrair_dados(bucket: str, key: str) -> Dict[str, Any]:
         """Baixa a imagem e usa OpenAI Vision para extrair dados estruturados."""
         from openai import OpenAI
+
+        langfuse_context.update_current_trace(
+            name="extracao-recibo",
+            metadata={"arquivo": key},
+        )
 
         with get_minio_client() as client:
             response = client.get_object(bucket, key)
@@ -100,6 +107,14 @@ def recibo_extraction_pipeline():
         raw = completion.choices[0].message.content
         data = json.loads(raw)
         data["arquivo_origem"] = key
+
+        langfuse_context.update_current_observation(
+        input={"arquivo": key},
+        output=data,
+        )
+
+        langfuse_context.flush()
+
         logger.info(f"Extraído de {key}: {data}")
         return data
 

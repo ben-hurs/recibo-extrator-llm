@@ -53,7 +53,10 @@ services:
       - airflow-init
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://recibo_user:recibo_pass@postgres/recibo_db
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://recibo_user:recibo_pass@postgres/recibo_db      
+      LANGFUSE_SECRET_KEY: sk-lf-3f41e74c-5c60-40ac-9f30-10d85b58c24c
+      LANGFUSE_PUBLIC_KEY: pk-lf-a88b7997-617f-4ddd-bd94-0b0797411017
+      LANGFUSE_HOST: https://us.cloud.langfuse.com
     volumes:
       - ./dags:/opt/airflow/dags
       - ./scripts:/opt/airflow/scripts
